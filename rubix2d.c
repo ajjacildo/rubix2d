@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-#define N 3
+#define N 5
 #define SIDES 6
 
 #define CLOCKWISE 0
@@ -120,10 +120,10 @@ void rotate_cube(cube_type cube, int side, int direction){
       case 1:
               if(direction==CLOCKWISE){
                  for(i=0;i<N;i++){
-                   temp=cube[3][i][0]; 
-                   cube[3][i][0]=cube[0][N-1][i];
-                   cube[0][N-1][i]=cube[1][N-1-i][N-1];
-                   cube[1][N-1-i][N-1]=cube[5][0][N-1-i];
+                   temp=cube[2][i][0]; 
+                   cube[2][i][0]=cube[0][i][0];
+                   cube[0][i][0]=cube[4][N-1-i][N-1];
+                   cube[4][N-1-i][N-1]=cube[5][i][0];
                    cube[5][0][N-1-i]=temp;
                  }
               }
