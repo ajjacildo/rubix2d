@@ -126,15 +126,15 @@ void printf_colored(int side){
 
      case RUBIX_YELLOW: printf(ANSI_COLOR_YELLOW "%2c " ANSI_COLOR_RESET,char_color(side));
                         break;
-     case RUBIX_WHITE:  printf(ANSI_COLOR_WHITE "%2c " ANSI_COLOR_RESET,char_color(side));
+     case RUBIX_WHITE:  printf(ANSI_COLOR_WHITE  "%2c " ANSI_COLOR_RESET,char_color(side));
                         break;
-     case RUBIX_RED:    printf(ANSI_COLOR_RED "%2c " ANSI_COLOR_RESET,char_color(side));
+     case RUBIX_RED:    printf(ANSI_COLOR_RED    "%2c " ANSI_COLOR_RESET,char_color(side));
                         break;
-     case RUBIX_BLUE:    printf(ANSI_COLOR_BLUE "%2c " ANSI_COLOR_RESET,char_color(side));
+     case RUBIX_BLUE:    printf(ANSI_COLOR_BLUE  "%2c " ANSI_COLOR_RESET,char_color(side));
                         break;
      case RUBIX_ORANGE: printf(ANSI_COLOR_ORANGE "%2c " ANSI_COLOR_RESET,char_color(side));
                         break;
-     case RUBIX_GREEN:  printf(ANSI_COLOR_GREEN "%2c " ANSI_COLOR_RESET,char_color(side));
+     case RUBIX_GREEN:  printf(ANSI_COLOR_GREEN  "%2c " ANSI_COLOR_RESET,char_color(side));
                         break;
    } 
 } 
