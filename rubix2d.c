@@ -52,21 +52,27 @@ int color_int(int c){
 }
 
 void read_cube(cube_type cube){
-   int s, i, j;
+   int s, i, j, count=0;
    int c;
    FILE *fp=NULL;
 
    fp=fopen("test.in","r");
    if(fp==NULL || feof(fp)) return;
 
-   for(s=0;s<SIDES;s++)   
-     for(i=0;i<N;i++)   
-       for(j=0;j<N;j++){
-         c=getc(fp);
-         if(c!='\n')
-           cube[s][i][j]=color_int(c);
-       }
-       fscanf(fp,"\n",&c);
+   while(!feof(fp)){
+     c=getc(fp);
+     if(feof(fp)) break;
+     if(c=='W' || c=='R' || c=='B' || c=='O' || c=='G' || c=='Y'){
+       //printf("%c",c);
+       s=count/(N*N); 
+       i=(count%(N*N))/N;   
+       j=count%N;
+       printf("%i %i %i\n",s,i,j);
+       cube[s][i][j]=color_int(c);
+       count++; 
+       if(count%N==0) printf("\n");
+     }
+   }
    fclose(fp);
 }
 
