@@ -9,20 +9,67 @@
 
 #include "rubix2d.h"
 
-#define MAX_MOVES 10
+#define MAX_MOVES 9
 
-
-void shuffle_cube(cube_type cube){
+void shuffle_cube1(cube_type cube){
 
    int i, n = MAX_MOVES, side, direction;
 
+   printf("Shuffle cube:\n");
    for(i=0;i<n;i++){
      side = rand()%6;
      direction = rand()%2;
      printf("rotate_cube(cube, %s, %s)\n",str_side[side],str_direction[direction]);
      rotate_cube(cube, side, direction);
-   }  
+   } 
+   //printf("\n"); 
 }
+
+void read_cube1(cube_type cube){
+   int s, i, j;
+   FILE *fp=NULL;
+
+   fp=fopen("test.in","r");
+   if(fp==NULL || feof(fp)) return;
+
+   for(s=0;s<SIDES;s++)   
+     for(i=0;i<N;i++)   
+       for(j=0;j<N;j++)
+         fscanf(fp,"%i",&cube[s][i][j]);
+   fclose(fp);
+}
+
+int color_int(int c){
+   switch(c){
+     case 'W': return 0;
+     case 'R': return 1;
+     case 'B': return 2;
+     case 'O': return 3;
+     case 'G': return 4;
+     case 'Y': return 5;
+
+   }
+}
+
+void read_cube(cube_type cube){
+   int s, i, j;
+   int c;
+   FILE *fp=NULL;
+
+   fp=fopen("test.in","r");
+   if(fp==NULL || feof(fp)) return;
+
+   for(s=0;s<SIDES;s++)   
+     for(i=0;i<N;i++)   
+       for(j=0;j<N;j++){
+         c=getc(fp);
+         if(c!='\n')
+           cube[s][i][j]=color_int(c);
+       }
+       fscanf(fp,"\n",&c);
+   fclose(fp);
+}
+
 
 int check_cube(cube_type cube){
    int i,j,s;
@@ -125,8 +172,10 @@ int main(){
   init_cube(cube);
   print_cube(cube);
 
-  shuffle_cube(cube);
+  read_cube(cube);
   print_cube(cube);
+  print_cube1(cube);
+
   
   solve_cube(cube);
   //print_cube(cube);

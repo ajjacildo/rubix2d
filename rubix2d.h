@@ -162,7 +162,7 @@ void print_cube1(cube_type cube){
    
    int i;
 
-   for(i=1;i<SIDES;i++)
+   for(i=0;i<SIDES;i++)
      print_side1(cube[i]); 
 }
 
