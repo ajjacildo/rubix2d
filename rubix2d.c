@@ -129,8 +129,8 @@ void rotate_cube(cube_type cube, int side, int direction){
               }
 	      else {
                  for(i=0;i<N;i++){
-                   temp=cube[3][i][0]; 
-                   cube[3][i][0]=cube[5][i][0];
+                   temp=cube[2][i][0]; 
+                   cube[2][i][0]=cube[5][i][0];
                    cube[5][i][0]=cube[4][N-1-i][N-1];
                    cube[4][N-1-i][N-1]=cube[0][i][0];
                    cube[0][i][0]=temp;
@@ -161,6 +161,28 @@ void rotate_cube(cube_type cube, int side, int direction){
               break;
 
       case 3:
+              if(direction==CLOCKWISE){
+                 for(i=0;i<N;i++){
+                   temp=cube[4][i][0]; 
+                   cube[4][i][0]=cube[0][N-1-i][N-1];
+                   cube[0][N-1-i][N-1]=cube[2][N-1-i][N-1];
+                   cube[2][N-1-i][N-1]=cube[5][N-1-i][N-1];
+                   cube[5][N-1-i][N-1]=temp;
+                 }
+              }
+	      else {
+                 for(i=0;i<N;i++){
+                   temp=cube[4][i][0]; 
+                   cube[4][i][0]=cube[5][N-1-i][N-1];
+                   cube[5][N-1-i][N-1]=cube[2][N-1-i][N-1];
+                   cube[2][N-1-i][N-1]=cube[0][N-1-i][N-1];
+                   cube[0][N-1-i][N-1]=temp;
+                 }
+              }	
+                
+              break;
+
+      case 4:
               if(direction==CLOCKWISE){
                  for(i=0;i<N;i++){
                    temp=cube[4][i][0]; 
