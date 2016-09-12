@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-#define N 5
+#define N 4
 #define SIDES 6
 
 #define CLOCKWISE 0
@@ -16,8 +16,8 @@ void init_side(side_type side, int color){
 
    for(i=0;i<N;i++)
      for(j=0;j<N;j++)
-       //side[i][j]=color;
-       side[i][j]=i*N+j+1;
+       side[i][j]=color;
+       //side[i][j]=i*N+j+1;
 }
 
 void init_cube(cube_type cube){
@@ -185,20 +185,42 @@ void rotate_cube(cube_type cube, int side, int direction){
       case 4:
               if(direction==CLOCKWISE){
                  for(i=0;i<N;i++){
-                   temp=cube[4][i][0]; 
-                   cube[4][i][0]=cube[0][N-1-i][N-1];
-                   cube[0][N-1-i][N-1]=cube[2][N-1-i][N-1];
-                   cube[2][N-1-i][N-1]=cube[5][N-1-i][N-1];
-                   cube[5][N-1-i][N-1]=temp;
+                   temp=cube[1][i][0]; 
+                   cube[1][i][0]=cube[0][0][N-i-1];
+                   cube[0][0][N-i-1]=cube[3][N-i-1][N-1];
+                   cube[3][N-i-1][N-1]=cube[5][N-1][i];
+                   cube[5][N-1][i]=temp;
                  }
               }
 	      else {
                  for(i=0;i<N;i++){
-                   temp=cube[4][i][0]; 
-                   cube[4][i][0]=cube[5][N-1-i][N-1];
-                   cube[5][N-1-i][N-1]=cube[2][N-1-i][N-1];
-                   cube[2][N-1-i][N-1]=cube[0][N-1-i][N-1];
-                   cube[0][N-1-i][N-1]=temp;
+                   temp=cube[1][i][0]; 
+                   cube[1][i][0]=cube[5][N-1][i];
+                   cube[5][N-1][i]=cube[3][N-i-1][N-1];
+                   cube[3][N-i-1][N-1]=cube[0][0][N-i-1];
+                   cube[0][0][N-i-1]=temp;
+                 }
+              }	
+                
+              break;
+
+      case 5:
+              if(direction==CLOCKWISE){
+                 for(i=0;i<N;i++){
+                   temp=cube[1][i][0]; 
+                   cube[1][i][0]=cube[0][0][N-i-1];
+                   cube[0][0][N-i-1]=cube[3][N-i-1][N-1];
+                   cube[3][N-i-1][N-1]=cube[5][N-1][i];
+                   cube[5][N-1][i]=temp;
+                 }
+              }
+	      else {
+                 for(i=0;i<N;i++){
+                   temp=cube[1][i][0]; 
+                   cube[1][i][0]=cube[5][N-1][i];
+                   cube[5][N-1][i]=cube[3][N-i-1][N-1];
+                   cube[3][N-i-1][N-1]=cube[0][0][N-i-1];
+                   cube[0][0][N-i-1]=temp;
                  }
               }	
                 
@@ -216,10 +238,10 @@ int main(){
 
   print_cube(cube);
 
-  rotate_cube(cube,1,CLOCKWISE);
+  rotate_cube(cube,4,CLOCKWISE);
   print_cube(cube);
 
-  rotate_cube(cube,1,COUNTER_CLOCKWISE);
+  rotate_cube(cube,4,COUNTER_CLOCKWISE);
   print_cube(cube);
 
   return(0);
