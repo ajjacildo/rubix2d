@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-#define N 4
+#define N 3
 #define SIDES 6
 
 #define CLOCKWISE 0
@@ -117,6 +117,28 @@ void rotate_cube(cube_type cube, int side, int direction){
    rotate_side(cube, side, direction);
 
    switch(side){
+
+      case 0:
+              if(direction==CLOCKWISE){
+                 for(i=0;i<N;i++){
+                   temp=cube[1][0][i]; 
+                   cube[1][0][i]=cube[2][0][i];
+                   cube[2][0][i]=cube[3][0][i];
+                   cube[3][0][i]=cube[4][0][i];
+                   cube[4][0][i]=temp;
+                 }
+              }
+	      else {
+                 for(i=0;i<N;i++){
+                   temp=cube[1][0][i]; 
+                   cube[1][0][i]=cube[4][0][i];
+                   cube[4][0][i]=cube[3][0][i];
+                   cube[3][0][i]=cube[2][0][i];
+                   cube[2][0][i]=temp;
+                 }
+              }	
+                
+              break;
       case 1:
               if(direction==CLOCKWISE){
                  for(i=0;i<N;i++){
@@ -207,20 +229,20 @@ void rotate_cube(cube_type cube, int side, int direction){
       case 5:
               if(direction==CLOCKWISE){
                  for(i=0;i<N;i++){
-                   temp=cube[1][i][0]; 
-                   cube[1][i][0]=cube[0][0][N-i-1];
-                   cube[0][0][N-i-1]=cube[3][N-i-1][N-1];
-                   cube[3][N-i-1][N-1]=cube[5][N-1][i];
-                   cube[5][N-1][i]=temp;
+                   temp=cube[1][N-1][i]; 
+                   cube[1][N-1][i]=cube[4][N-1][i];
+                   cube[4][N-1][i]=cube[3][N-1][i];
+                   cube[3][N-1][i]=cube[2][N-1][i];
+                   cube[2][N-1][i]=temp;
                  }
               }
 	      else {
                  for(i=0;i<N;i++){
-                   temp=cube[1][i][0]; 
-                   cube[1][i][0]=cube[5][N-1][i];
-                   cube[5][N-1][i]=cube[3][N-i-1][N-1];
-                   cube[3][N-i-1][N-1]=cube[0][0][N-i-1];
-                   cube[0][0][N-i-1]=temp;
+                   temp=cube[1][N-1][i]; 
+                   cube[1][N-1][i]=cube[2][N-1][i];
+                   cube[2][N-1][i]=cube[3][N-1][i];
+                   cube[3][N-1][i]=cube[4][N-1][i];
+                   cube[4][N-1][i]=temp;
                  }
               }	
                 
@@ -238,10 +260,10 @@ int main(){
 
   print_cube(cube);
 
-  rotate_cube(cube,4,CLOCKWISE);
+  rotate_cube(cube,0,CLOCKWISE);
   print_cube(cube);
 
-  rotate_cube(cube,4,COUNTER_CLOCKWISE);
+  rotate_cube(cube,0,COUNTER_CLOCKWISE);
   print_cube(cube);
 
   return(0);
