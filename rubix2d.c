@@ -16,8 +16,8 @@ void init_side(side_type side, int color){
 
    for(i=0;i<N;i++)
      for(j=0;j<N;j++)
-       side[i][j]=color;
-       //side[i][j]=i*N+j+1;
+       //side[i][j]=color;
+       side[i][j]=i*N+j+1;
 }
 
 void init_cube(cube_type cube){
@@ -124,16 +124,16 @@ void rotate_cube(cube_type cube, int side, int direction){
                    cube[2][i][0]=cube[0][i][0];
                    cube[0][i][0]=cube[4][N-1-i][N-1];
                    cube[4][N-1-i][N-1]=cube[5][i][0];
-                   cube[5][0][N-1-i]=temp;
+                   cube[5][i][0]=temp;
                  }
               }
 	      else {
                  for(i=0;i<N;i++){
                    temp=cube[3][i][0]; 
-                   cube[3][i][0]=cube[5][0][N-1-i];
-                   cube[5][0][N-1-i]=cube[1][N-1-i][N-1];
-                   cube[1][N-1-i][N-1]=cube[0][N-1][i];
-                   cube[0][N-1][i]=temp;
+                   cube[3][i][0]=cube[5][i][0];
+                   cube[5][i][0]=cube[4][N-1-i][N-1];
+                   cube[4][N-1-i][N-1]=cube[0][i][0];
+                   cube[0][i][0]=temp;
                  }
               }	
               break;
