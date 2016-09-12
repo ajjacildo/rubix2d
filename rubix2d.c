@@ -1,4 +1,11 @@
-//A rubix2d solver
+/***** 
+   A rubix2d solver
+
+
+   ajj--12 September 2016, 7:31PM @Apt.1B
+
+*****/
+
 
 #include "rubix2d.h"
 
@@ -17,14 +24,10 @@ void shuffle_cube(cube_type cube){
 
 void solve_cube(cube_type cube){
 
-   int max_moves = 10   
+   int max_moves = 10;   
    int start, move;
    int nopts[max_moves+2];
    int option[max_moves+2][max_moves+2];
-
-
-
-
 }
 
 int main(){
@@ -32,30 +35,7 @@ int main(){
   cube_type cube;
 
   init_cube(cube);
-
   print_cube(cube);
-
-  //ROTATION test
-  /*rotate_cube(cube,0,CLOCKWISE);
-  print_cube(cube);
-
-  rotate_cube(cube,0,COUNTER_CLOCKWISE);
-  print_cube(cube);
-  
-  cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
-  print_cube(cube);
-
-  cross3gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
-  print_cube(cube);
-
-  cross3gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
-  cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
-  print_cube(cube);
-
-  cube2x2gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
-  print_cube(cube);
-
-  */
 
   shuffle_cube(cube);
   print_cube(cube);
@@ -63,6 +43,28 @@ int main(){
   solve_cube(cube);
   print_cube(cube);
 
+
+  //ROTATION test
+  //rotate_cube(cube,0,CLOCKWISE);
+  //print_cube(cube);
+
+  //rotate_cube(cube,0,COUNTER_CLOCKWISE);
+  //print_cube(cube);
+  
+  //cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
+  //print_cube(cube);
+
+  //cross3gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
+  //print_cube(cube);
+
+  //cross3gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
+  //cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
+  //print_cube(cube);
+
+  //cube2x2gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
+  //print_cube(cube);
+
+  
   return(0);
 }
 

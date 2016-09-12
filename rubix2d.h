@@ -17,9 +17,10 @@
      USAGE e.g.
                rotate_side(mycube, RUBIX_RED, CLOCKWISE);
 
+  ajj--12 September 2016, 7:31PM @Apt.1B 
 
-*****ajj -- 12 September 2016, 7:31PM @Apt.1B
-*/
+*****/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -621,26 +622,38 @@ void cross3gen(cube_type cube, int top, int left, int right){
 
 }
 
-char *str_side(int side){
-  switch(side){
-    case 0: return("WHITE"); 
-    case 1: return("RED"); 
-    case 2: return("BLUE"); 
-    case 3: return("ORANGE"); 
-    case 4: return("GREEN"); 
-    case 5: return("YELLOW"); 
-  }
+/*
+// main moved to rubix2d.c
+int main(){
+
+  cube_type cube;
+
+  init_cube(cube);
+
+  print_cube(cube);
+
+  //ROTATION test
+  //rotate_cube(cube,0,CLOCKWISE);
+  //print_cube(cube);
+
+  //rotate_cube(cube,0,COUNTER_CLOCKWISE);
+  //print_cube(cube);
+  
+  cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
+  print_cube(cube);
+
+  cross3gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
+  print_cube(cube);
+
+  cross3gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
+  cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
+  print_cube(cube);
+
+  cube2x2gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
+  print_cube(cube);
+  
+  return(0);
 }
 
-char *str_direction(int side){
-  switch(side){
-    case 0: return("CLOCKWISE"); 
-    case 1: return("COUNTER_CLOCKWISE"); 
-  }
-}
 
-
-
-
-
-
+*/
