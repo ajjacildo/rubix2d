@@ -26,6 +26,7 @@
 #define ANSI_COLOR_BLUE    "\x1b[44m"
 #define ANSI_COLOR_MAGENTA "\x1b[45m"
 #define ANSI_COLOR_ORANGE  "\x1b[45m"
+//#define ANSI_COLOR_ORANGE  "\033[48:2:255:165:0m"
 #define ANSI_COLOR_CYAN    "\x1b[46m"
 #define ANSI_COLOR_WHITE   "\x1b[47m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
@@ -40,6 +41,9 @@
 
 typedef int side_type[N][N];
 typedef side_type cube_type[SIDES];
+
+char *str_side[6]={"WHITE","RED","BLUE","ORANGE","GREEN","YELLOW"}; 
+char *str_direction[2]={"CLOCKWISE","COUNTER_CLOCKWISE"};
 
 
 int opposite(int side){
@@ -139,7 +143,7 @@ void printf_colored(int side){
    } 
 } 
 
-void print_side(side_type side){
+void print_side2(side_type side){
    int i,j;
 
    for(i=0;i<N;i++){
@@ -158,11 +162,11 @@ void print_side(side_type side){
 }
 
 
-void print_cube(cube_type cube){
+void print_cube2(cube_type cube){
    
    int i,j,side;
 
-   print_side(cube[0]); 
+   print_side2(cube[0]); 
 
    for(i=0;i<N;i++){
      for(side=1;side<SIDES-1;side++)
@@ -172,10 +176,12 @@ void print_cube(cube_type cube){
          printf_colored(cube[side][i][j]); 
      printf("\n");
    }
-   print_side(cube[5]); 
+   print_side2(cube[5]); 
    printf("\n");
 
 }
+
+
 
 void swap(int *a, int *b){
    int temp;
@@ -183,7 +189,7 @@ void swap(int *a, int *b){
    temp=*a;*a=*b;*b=temp;
 }
 
-void rotate_side(cube_type cube, int side, int direction){
+void rotate_side(side_type cube_side, int direction){
    int i,j,ri,rj;
    side_type temp_side;
 
@@ -200,18 +206,16 @@ void rotate_side(cube_type cube, int side, int direction){
         } 
         //printf("%i %i -> %i %i \n", i,j, ri, rj);
         
-        temp_side[ri][rj]=cube[side][i][j];
+        temp_side[ri][rj]=cube_side[i][j];
      }
 
-   memcpy(cube[side],temp_side,sizeof(side_type));	   
- 
-
+     memcpy(cube_side,temp_side,sizeof(side_type));	   
 }
 
 void rotate_cube(cube_type cube, int side, int direction){
-   int i,temp; 
-  
-   rotate_side(cube, side, direction);
+   int i,temp;
+ 
+   rotate_side(cube[side], direction);
 
    switch(side){
 
@@ -349,6 +353,170 @@ void rotate_cube(cube_type cube, int side, int direction){
    
 }
 
+void print_cube(cube_type cube){
+   int i,j;
+   side_type temp_side;
+
+
+   //side 0
+   for(i=0;i<N;i++){
+     for(j=0;j<N;j++)
+       printf("   ");
+     for(j=0;j<N;j++)
+       printf_colored(cube[0][i][j]);
+     printf("\n");
+   }
+
+   //side 1 and 2
+   for(i=0;i<N;i++){
+     for(j=0;j<N;j++)
+       printf_colored(cube[1][i][j]); 
+     for(j=0;j<N;j++)
+       printf_colored(cube[2][i][j]); 
+     printf("\n");
+   }
+
+   //side 5 and 3
+   memcpy(temp_side,cube[3],sizeof(side_type));
+   rotate_side(temp_side,CLOCKWISE);
+   for(i=0;i<N;i++){
+     for(j=0;j<N;j++)
+       printf("   ");
+     for(j=0;j<N;j++)
+       printf_colored(cube[5][i][j]);
+     for(j=0;j<N;j++)
+       printf_colored(temp_side[i][j]);
+     printf("\n");
+   } 
+   
+   //side 4
+   memcpy(temp_side,cube[4],sizeof(side_type));
+   rotate_side(temp_side,CLOCKWISE);
+   rotate_side(temp_side,CLOCKWISE);
+   for(i=0;i<N;i++){
+     for(j=0;j<N;j++)
+       printf("   ");
+     for(j=0;j<N;j++)
+       printf_colored(temp_side[i][j]);
+     printf("\n");
+   } 
+   printf("\n");
+}
+
+void cube2x2gen(cube_type cube, int top, int left, int right){
+
+  if (N!=3) return;
+
+  //layer 1
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,CLOCKWISE);
+  rotate_cube(cube,top,CLOCKWISE);
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(right),CLOCKWISE);
+  rotate_cube(cube,top,COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,CLOCKWISE);
+  rotate_cube(cube,opposite(right),CLOCKWISE);
+  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+
+  //layer2
+  //layer2 move1
+  rotate_cube(cube,right,COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,right,CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,left,CLOCKWISE);
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+
+  //layer2 move2
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,opposite(right),CLOCKWISE);
+
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,opposite(left),CLOCKWISE);
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(left),COUNTER_CLOCKWISE);
+
+  //layer2 move3
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+
+  rotate_cube(cube,opposite(right),CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE);
+
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,CLOCKWISE);
+
+  //layer3 
+  //layer3 correct cross
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+
+  rotate_cube(cube,left,CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+
+  rotate_cube(cube,left,CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+
+  //layer3 corner1
+  rotate_cube(cube,opposite(right),CLOCKWISE); 
+  rotate_cube(cube,opposite(top),CLOCKWISE); 
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE); 
+
+  rotate_cube(cube,right,COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,opposite(right),CLOCKWISE); 
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+
+  rotate_cube(cube,right,CLOCKWISE); 
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+
+
+  //layer3 corner2
+  rotate_cube(cube,top,CLOCKWISE); 
+  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(right),CLOCKWISE); 
+
+  rotate_cube(cube,top,COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(top),CLOCKWISE); 
+
+  rotate_cube(cube,opposite(right),CLOCKWISE); 
+  rotate_cube(cube,top,CLOCKWISE); 
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,top,COUNTER_CLOCKWISE); 
+
+  //layer3 corner3
+  rotate_cube(cube,left,COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(left),CLOCKWISE); 
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+
+  rotate_cube(cube,left,CLOCKWISE); 
+  rotate_cube(cube,opposite(right),CLOCKWISE); 
+  rotate_cube(cube,opposite(left),COUNTER_CLOCKWISE); 
+
+  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,left,COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(right),CLOCKWISE); 
+  rotate_cube(cube,left,CLOCKWISE); 
+  
+}
+
 
 
 
@@ -412,62 +580,52 @@ void cross3gen(cube_type cube, int top, int left, int right){
 }
 
 
-void cross3(cube_type cube){
+char *str_side(int side){
+  switch(side){
+    case 0: return("WHITE"); 
+    case 1: return("RED"); 
+    case 2: return("BLUE"); 
+    case 3: return("ORANGE"); 
+    case 4: return("GREEN"); 
+    case 5: return("YELLOW"); 
+  }
+}
 
-  if (N!=3) return;
-
-  //first I
-  rotate_cube(cube,1,COUNTER_CLOCKWISE);
-  rotate_cube(cube,3,CLOCKWISE);
-
-  rotate_cube(cube,4,CLOCKWISE);
-  rotate_cube(cube,4,CLOCKWISE);
-
-  rotate_cube(cube,1,CLOCKWISE);
-  rotate_cube(cube,3,COUNTER_CLOCKWISE);
-
-  rotate_cube(cube,1,CLOCKWISE);
-  rotate_cube(cube,3,COUNTER_CLOCKWISE);
-
-  rotate_cube(cube,2,CLOCKWISE);
-  rotate_cube(cube,2,CLOCKWISE);
-
-  rotate_cube(cube,1,COUNTER_CLOCKWISE);
-  rotate_cube(cube,3,CLOCKWISE);
-
-  //rotate one side
-  rotate_cube(cube,1,COUNTER_CLOCKWISE);
-
-  //rotate two sides 2x
-  rotate_cube(cube,2,COUNTER_CLOCKWISE);
-  rotate_cube(cube,4,CLOCKWISE);
-  rotate_cube(cube,2,COUNTER_CLOCKWISE);
-  rotate_cube(cube,4,CLOCKWISE);
+char *str_direction(int side){
+  switch(side){
+    case 0: return("CLOCKWISE"); 
+    case 1: return("COUNTER_CLOCKWISE"); 
+  }
+}
 
 
-  //second I
-  rotate_cube(cube,0,COUNTER_CLOCKWISE);
-  rotate_cube(cube,5,CLOCKWISE);
 
-  rotate_cube(cube,2,CLOCKWISE);
-  rotate_cube(cube,2,CLOCKWISE);
+void shuffle_cube(cube_type cube){
 
-  rotate_cube(cube,0,CLOCKWISE);
-  rotate_cube(cube,5,COUNTER_CLOCKWISE);
+   int i, n = 10, side, direction;
 
-  rotate_cube(cube,0,CLOCKWISE);
-  rotate_cube(cube,5,COUNTER_CLOCKWISE);
+   for(i=0;i<n;i++){
+     side = rand()%6;
+     direction = rand()%2;
+     printf("rotate_cube(cube, %s, %s)\n",str_side[side],str_direction[direction]);
+     rotate_cube(cube, side, direction);
+   }  
+}
 
-  rotate_cube(cube,4,CLOCKWISE);
-  rotate_cube(cube,4,CLOCKWISE);
+void solve_cube(cube_type cube){
 
-  rotate_cube(cube,0,COUNTER_CLOCKWISE);
-  rotate_cube(cube,5,CLOCKWISE);
+   int max_moves = 10   
+   int start, move;
+   int nopts[max_moves+2];
+   int option[max_moves+2][max_moves+2];
 
-  //rotate one side (reverse)
-  rotate_cube(cube,1,CLOCKWISE);
+
+   
+
+
 
 }
+
 
 
 int main(){
@@ -484,14 +642,30 @@ int main(){
 
   rotate_cube(cube,0,COUNTER_CLOCKWISE);
   print_cube(cube);
-  */
-
+  
   cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
   print_cube(cube);
 
   cross3gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
   print_cube(cube);
 
+  cross3gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
+  cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
+  print_cube(cube);
+
+  cube2x2gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
+  print_cube(cube);
+
+  */
+
+  shuffle_cube(cube);
+  print_cube(cube);
+  
+  solve_cube(cube);
+  print_cube(cube);
+
+
+   
 
   return(0);
 }
