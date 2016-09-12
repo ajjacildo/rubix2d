@@ -194,10 +194,10 @@ int main(){
 
   print_cube(cube);
 
-  rotate_cube(cube,3,CLOCKWISE);
+  rotate_cube(cube,1,CLOCKWISE);
   print_cube(cube);
 
-  rotate_cube(cube,3,COUNTER_CLOCKWISE);
+  rotate_cube(cube,1,COUNTER_CLOCKWISE);
   print_cube(cube);
 
   return(0);
