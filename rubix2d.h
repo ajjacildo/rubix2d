@@ -28,8 +28,7 @@
 #define N 3
 #define SIDES 6
 
-#define CLOCKWISE 0
-#define COUNTER_CLOCKWISE 1
+#define CLOCKWISE 1
 
 #define ANSI_COLOR_RED     "\x1b[41m"
 #define ANSI_COLOR_GREEN   "\x1b[42m"
@@ -54,7 +53,7 @@ typedef int side_type[N][N];
 typedef side_type cube_type[SIDES];
 
 char *str_side[6]={"WHITE","RED","BLUE","ORANGE","GREEN","YELLOW"}; 
-char *str_direction[2]={"CLOCKWISE","COUNTER_CLOCKWISE"};
+char *str_direction[2]={"CLOCKWISE","!CLOCKWISE"};
 
 //Function Prototypes
 //rubix2d Essentials
@@ -451,39 +450,39 @@ void cube2x2gen(cube_type cube, int top, int left, int right){
   if (N!=3) return;
 
   //layer 1
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
   rotate_cube(cube,left,CLOCKWISE);
   rotate_cube(cube,top,CLOCKWISE);
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE);
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE);
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(right),!CLOCKWISE);
+  rotate_cube(cube,opposite(right),!CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
   rotate_cube(cube,opposite(right),CLOCKWISE);
-  rotate_cube(cube,top,COUNTER_CLOCKWISE);
+  rotate_cube(cube,top,!CLOCKWISE);
   rotate_cube(cube,left,CLOCKWISE);
   rotate_cube(cube,opposite(right),CLOCKWISE);
-  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,!CLOCKWISE);
 
   //layer2
   //layer2 move1
-  rotate_cube(cube,right,COUNTER_CLOCKWISE);
+  rotate_cube(cube,right,!CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
   rotate_cube(cube,right,CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
   rotate_cube(cube,left,CLOCKWISE);
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
-  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
+  rotate_cube(cube,left,!CLOCKWISE);
 
   //layer2 move2
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
 
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(right),!CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
   rotate_cube(cube,opposite(right),CLOCKWISE);
 
   rotate_cube(cube,opposite(top),CLOCKWISE);
   rotate_cube(cube,opposite(left),CLOCKWISE);
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
-  rotate_cube(cube,opposite(left),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
+  rotate_cube(cube,opposite(left),!CLOCKWISE);
 
   //layer2 move3
   rotate_cube(cube,opposite(top),CLOCKWISE);
@@ -491,11 +490,11 @@ void cube2x2gen(cube_type cube, int top, int left, int right){
 
   rotate_cube(cube,opposite(right),CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(right),!CLOCKWISE);
 
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
-  rotate_cube(cube,left,COUNTER_CLOCKWISE);
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
+  rotate_cube(cube,left,!CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
   rotate_cube(cube,left,CLOCKWISE);
 
   //layer3 
@@ -504,13 +503,13 @@ void cube2x2gen(cube_type cube, int top, int left, int right){
 
   rotate_cube(cube,left,CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
-  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,!CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
 
   rotate_cube(cube,left,CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
-  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,!CLOCKWISE);
 
   rotate_cube(cube,opposite(top),CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
@@ -518,43 +517,43 @@ void cube2x2gen(cube_type cube, int top, int left, int right){
   //layer3 corner1
   rotate_cube(cube,opposite(right),CLOCKWISE); 
   rotate_cube(cube,opposite(top),CLOCKWISE); 
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(right),!CLOCKWISE); 
+  rotate_cube(cube,opposite(top),!CLOCKWISE); 
 
-  rotate_cube(cube,right,COUNTER_CLOCKWISE); 
+  rotate_cube(cube,right,!CLOCKWISE); 
   rotate_cube(cube,opposite(top),CLOCKWISE);
   rotate_cube(cube,opposite(right),CLOCKWISE); 
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
 
   rotate_cube(cube,right,CLOCKWISE); 
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(right),!CLOCKWISE); 
 
 
   //layer3 corner2
   rotate_cube(cube,top,CLOCKWISE); 
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(top),!CLOCKWISE); 
   rotate_cube(cube,opposite(right),CLOCKWISE); 
 
-  rotate_cube(cube,top,COUNTER_CLOCKWISE); 
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,top,!CLOCKWISE); 
+  rotate_cube(cube,opposite(right),!CLOCKWISE); 
   rotate_cube(cube,opposite(top),CLOCKWISE); 
 
   rotate_cube(cube,opposite(right),CLOCKWISE); 
   rotate_cube(cube,top,CLOCKWISE); 
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
-  rotate_cube(cube,top,COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(right),!CLOCKWISE); 
+  rotate_cube(cube,top,!CLOCKWISE); 
 
   //layer3 corner3
-  rotate_cube(cube,left,COUNTER_CLOCKWISE); 
+  rotate_cube(cube,left,!CLOCKWISE); 
   rotate_cube(cube,opposite(left),CLOCKWISE); 
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(right),!CLOCKWISE); 
 
   rotate_cube(cube,left,CLOCKWISE); 
   rotate_cube(cube,opposite(right),CLOCKWISE); 
-  rotate_cube(cube,opposite(left),COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(left),!CLOCKWISE); 
 
-  rotate_cube(cube,opposite(right),COUNTER_CLOCKWISE); 
-  rotate_cube(cube,left,COUNTER_CLOCKWISE); 
+  rotate_cube(cube,opposite(right),!CLOCKWISE); 
+  rotate_cube(cube,left,!CLOCKWISE); 
   rotate_cube(cube,opposite(right),CLOCKWISE); 
   rotate_cube(cube,left,CLOCKWISE); 
   
@@ -569,52 +568,52 @@ void cross3gen(cube_type cube, int top, int left, int right){
   if (N!=3) return;
 
   //first I
-  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,!CLOCKWISE);
   rotate_cube(cube,opposite(left),CLOCKWISE);
 
   rotate_cube(cube,opposite(right),CLOCKWISE);
   rotate_cube(cube,opposite(right),CLOCKWISE);
 
   rotate_cube(cube,left,CLOCKWISE);
-  rotate_cube(cube,opposite(left),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(left),!CLOCKWISE);
 
   rotate_cube(cube,left,CLOCKWISE);
-  rotate_cube(cube,opposite(left),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(left),!CLOCKWISE);
 
   rotate_cube(cube,right,CLOCKWISE);
   rotate_cube(cube,right,CLOCKWISE);
 
-  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,!CLOCKWISE);
   rotate_cube(cube,opposite(left),CLOCKWISE);
 
   //rotate one side
-  rotate_cube(cube,left,COUNTER_CLOCKWISE);
+  rotate_cube(cube,left,!CLOCKWISE);
 
   //rotate two sides 2x
-  rotate_cube(cube,right,COUNTER_CLOCKWISE);
+  rotate_cube(cube,right,!CLOCKWISE);
   rotate_cube(cube,opposite(right),CLOCKWISE);
 
-  rotate_cube(cube,right,COUNTER_CLOCKWISE);
+  rotate_cube(cube,right,!CLOCKWISE);
   rotate_cube(cube,opposite(right),CLOCKWISE);
 
 
   //second I
-  rotate_cube(cube,top,COUNTER_CLOCKWISE);
+  rotate_cube(cube,top,!CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
 
   rotate_cube(cube,right,CLOCKWISE);
   rotate_cube(cube,right,CLOCKWISE);
 
   rotate_cube(cube,top,CLOCKWISE);
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
 
   rotate_cube(cube,top,CLOCKWISE);
-  rotate_cube(cube,opposite(top),COUNTER_CLOCKWISE);
+  rotate_cube(cube,opposite(top),!CLOCKWISE);
 
   rotate_cube(cube,opposite(right),CLOCKWISE);
   rotate_cube(cube,opposite(right),CLOCKWISE);
 
-  rotate_cube(cube,top,COUNTER_CLOCKWISE);
+  rotate_cube(cube,top,!CLOCKWISE);
   rotate_cube(cube,opposite(top),CLOCKWISE);
 
   //rotate one side (reverse)
@@ -636,7 +635,7 @@ int main(){
   //rotate_cube(cube,0,CLOCKWISE);
   //print_cube(cube);
 
-  //rotate_cube(cube,0,COUNTER_CLOCKWISE);
+  //rotate_cube(cube,0,!CLOCKWISE);
   //print_cube(cube);
   
   cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);

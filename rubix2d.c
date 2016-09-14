@@ -92,6 +92,31 @@ int check_cube(cube_type cube){
    return(s==SIDES);
 }
 
+
+
+
+int nc_side(int cell){
+   switch(cell){
+     case 1: return(4); 
+     case 3: return(1); 
+     case 5: return(3); 
+     case 7: return(2); 
+   }
+}
+
+int lnc_side(int cell){
+   switch(cell){
+     case 1: return(3); 
+     case 3: return(4); 
+     case 5: return(2); 
+     case 7: return(1); 
+   }
+}
+
+
+
+
+
 void solve_cube(cube_type cube){
 
    int max_moves = MAX_MOVES;   
@@ -160,7 +185,7 @@ void solve_cube(cube_type cube){
        move--;
        if(move > 0){
           c = option[move][nopts[move]];
-          revdir = c%2? CLOCKWISE:COUNTER_CLOCKWISE;
+          revdir = c%2? CLOCKWISE:!CLOCKWISE;
           rotate_cube(cube, c/2, revdir);
           //printf("backtrack move %i: ",move);
           //printf("rotate_cube(cube, %s, %s)\n",str_side[c/2],str_direction[revdir]);
@@ -171,27 +196,105 @@ void solve_cube(cube_type cube){
    }
 }
 
+void shuffle_layer1(cube_type cube){
+  int lncs = RUBIX_ORANGE;
+  int top = RUBIX_WHITE;
+  int ncs = RUBIX_GREEN;
+   
+                   rotate_cube(cube,lncs,!CLOCKWISE);
+                   rotate_cube(cube,opposite(lncs),CLOCKWISE);
+
+                   rotate_cube(cube,ncs,CLOCKWISE);
+                   rotate_cube(cube,ncs,CLOCKWISE);
+
+                   rotate_cube(cube,lncs,CLOCKWISE);  
+                   rotate_cube(cube,opposite(lncs),!CLOCKWISE);
+
+                   rotate_cube(cube,ncs,!CLOCKWISE);
+                   rotate_cube(cube,top,!CLOCKWISE);
+                   rotate_cube(cube,opposite(top),CLOCKWISE);
+                   rotate_cube(cube,opposite(lncs),CLOCKWISE);
+                   rotate_cube(cube,top,CLOCKWISE);
+                   rotate_cube(cube,opposite(top),CLOCKWISE);
+}
+
+void solve_cubem(cube_type cube){
+
+  int start_side=RUBIX_WHITE;
+  int c, i, j, s,ncs,lncs;
+
+  int state = 1;
+  
+  int top = RUBIX_WHITE;
+  int left = RUBIX_RED;
+  int front = RUBIX_BLUE;
+
+
+  while(1){    
+    switch(state){
+      case 1: //first layer non-corners
+              for(c=1;c<8;c+=2){
+//              c=1;
+
+                ncs=nc_side(c);
+                lncs=lnc_side(c);
+                i=c/3;
+                j=c%3;
+
+                if(cube[top][i][j]==top &&  cube[ncs][0][1]==ncs) continue;
+                if(cube[top][i][j]==ncs &&  cube[ncs][0][1]==top){
+                   rotate_cube(cube,lncs,!CLOCKWISE);
+                   rotate_cube(cube,opposite(lncs),CLOCKWISE);
+
+                   rotate_cube(cube,ncs,CLOCKWISE);
+                   rotate_cube(cube,ncs,CLOCKWISE);
+
+
+                   rotate_cube(cube,lncs,CLOCKWISE);  
+                   rotate_cube(cube,opposite(lncs),!CLOCKWISE);
+
+                   rotate_cube(cube,ncs,!CLOCKWISE);
+                   rotate_cube(cube,top,!CLOCKWISE);
+                   rotate_cube(cube,opposite(top),CLOCKWISE);
+                   rotate_cube(cube,opposite(lncs),CLOCKWISE);
+                   rotate_cube(cube,top,CLOCKWISE);
+                   rotate_cube(cube,opposite(top),CLOCKWISE);
+                 } //if 
+              }//for c in case 1
+              break;   
+
+    }//switch(state)
+    break;
+  }//while(1) 
+}//solve_cubem
+
 int main(){
 
   cube_type cube;
 
-  init_cube(cube);
-  print_cube(cube);
+  //printf("%i %i", !CLOCKWISE, CLOCKWISE);  exit(1);
 
-  read_cube(cube);
-  print_cube(cube);
-  print_cube1(cube);
+  init_cube(cube);
+  print_cube2(cube);
+
+
+  shuffle_layer1(cube);
+  print_cube2(cube);
 
   
-  solve_cube(cube);
+  solve_cubem(cube);
+  print_cube2(cube);
+
+  //read_cube(cube);
   //print_cube(cube);
+  //print_cube1(cube);
 
 
   //ROTATION test
   //rotate_cube(cube,0,CLOCKWISE);
   //print_cube(cube);
 
-  //rotate_cube(cube,0,COUNTER_CLOCKWISE);
+  //rotate_cube(cube,0,!CLOCKWISE);
   //print_cube(cube);
   
   //cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
@@ -207,7 +310,6 @@ int main(){
   //cube2x2gen(cube,RUBIX_RED,RUBIX_YELLOW,RUBIX_BLUE);
   //print_cube(cube);
 
-  
   return(0);
 }
 
