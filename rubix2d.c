@@ -11,9 +11,9 @@
 
 #define MAX_MOVES 9
 
-void shuffle_cube1(cube_type cube){
+void shuffle_random(cube_type cube, int n){
 
-   int i, n = MAX_MOVES, side, direction;
+   int i, ,side, direction;
 
    printf("Shuffle cube:\n");
    for(i=0;i<n;i++){
@@ -25,7 +25,7 @@ void shuffle_cube1(cube_type cube){
    //printf("\n"); 
 }
 
-void read_cube1(cube_type cube){
+void shuffle_from_file_int(cube_type cube){
    int s, i, j;
    FILE *fp=NULL;
 
@@ -51,7 +51,7 @@ int color_int(int c){
    }
 }
 
-void read_cube(cube_type cube){
+void shuffle_from_file_char(cube_type cube){
    int s, i, j, count=0;
    int c;
    FILE *fp=NULL;
@@ -92,32 +92,7 @@ int check_cube(cube_type cube){
    return(s==SIDES);
 }
 
-
-
-
-int nc_side(int cell){
-   switch(cell){
-     case 1: return(4); 
-     case 3: return(1); 
-     case 5: return(3); 
-     case 7: return(2); 
-   }
-}
-
-int lnc_side(int cell){
-   switch(cell){
-     case 1: return(3); 
-     case 3: return(4); 
-     case 5: return(2); 
-     case 7: return(1); 
-   }
-}
-
-
-
-
-
-void solve_cube(cube_type cube){
+void solve_backtrack(cube_type cube){
 
    int max_moves = MAX_MOVES;   
    int start, move,i,j;
@@ -218,7 +193,26 @@ void shuffle_layer1(cube_type cube){
                    rotate_cube(cube,opposite(top),CLOCKWISE);
 }
 
-void solve_cubem(cube_type cube){
+int nc_side(int cell){
+   switch(cell){
+     case 1: return(4); 
+     case 3: return(1); 
+     case 5: return(3); 
+     case 7: return(2); 
+   }
+}
+
+int lnc_side(int cell){
+   switch(cell){
+     case 1: return(3); 
+     case 3: return(4); 
+     case 5: return(2); 
+     case 7: return(1); 
+   }
+}
+
+
+void solve_manually(cube_type cube){
 
   int start_side=RUBIX_WHITE;
   int c, i, j, s,ncs,lncs;
@@ -259,6 +253,7 @@ void solve_cubem(cube_type cube){
                    rotate_cube(cube,opposite(lncs),CLOCKWISE);
                    rotate_cube(cube,top,CLOCKWISE);
                    rotate_cube(cube,opposite(top),CLOCKWISE);
+                   continue; 
                  } //if 
               }//for c in case 1
               break;   
@@ -285,7 +280,9 @@ int main(){
   solve_cubem(cube);
   print_cube2(cube);
 
-  //read_cube(cube);
+
+  //SHUFFLE test
+  //shuffle_from_file_char(cube);
   //print_cube(cube);
   //print_cube1(cube);
 
@@ -296,7 +293,9 @@ int main(){
 
   //rotate_cube(cube,0,!CLOCKWISE);
   //print_cube(cube);
-  
+
+
+  //PATTERNS   
   //cross3gen(cube,RUBIX_WHITE,RUBIX_RED,RUBIX_BLUE);
   //print_cube(cube);
 
