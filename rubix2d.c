@@ -13,7 +13,7 @@
 
 void shuffle_random(cube_type cube, int n){
 
-   int i, ,side, direction;
+   int i, side, direction;
 
    printf("Shuffle cube:\n");
    for(i=0;i<n;i++){
@@ -92,9 +92,10 @@ int check_cube(cube_type cube){
    return(s==SIDES);
 }
 
-void solve_backtrack(cube_type cube){
+void solve_backtrack(cube_type cube, int n){
 
-   int max_moves = MAX_MOVES;   
+   //int max_moves = MAX_MOVES;   
+   int max_moves = n;   
    int start, move,i,j;
    int s,side,direction,revdir;
    int c, prevc;
@@ -175,22 +176,34 @@ void shuffle_layer1(cube_type cube){
   int lncs = RUBIX_ORANGE;
   int top = RUBIX_WHITE;
   int ncs = RUBIX_GREEN;
-   
-                   rotate_cube(cube,lncs,!CLOCKWISE);
-                   rotate_cube(cube,opposite(lncs),CLOCKWISE);
+/*   
+  //opposite non-corner side
+  rotate_cube(cube,lncs,!CLOCKWISE);
+  rotate_cube(cube,opposite(lncs),CLOCKWISE);
 
-                   rotate_cube(cube,ncs,CLOCKWISE);
-                   rotate_cube(cube,ncs,CLOCKWISE);
+  rotate_cube(cube,ncs,CLOCKWISE);
+  rotate_cube(cube,ncs,CLOCKWISE);
 
-                   rotate_cube(cube,lncs,CLOCKWISE);  
-                   rotate_cube(cube,opposite(lncs),!CLOCKWISE);
+  rotate_cube(cube,lncs,CLOCKWISE);  
+  rotate_cube(cube,opposite(lncs),!CLOCKWISE);
 
-                   rotate_cube(cube,ncs,!CLOCKWISE);
-                   rotate_cube(cube,top,!CLOCKWISE);
-                   rotate_cube(cube,opposite(top),CLOCKWISE);
-                   rotate_cube(cube,opposite(lncs),CLOCKWISE);
-                   rotate_cube(cube,top,CLOCKWISE);
-                   rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,ncs,!CLOCKWISE);
+  rotate_cube(cube,top,!CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+  rotate_cube(cube,opposite(lncs),CLOCKWISE);
+  rotate_cube(cube,top,CLOCKWISE);
+  rotate_cube(cube,opposite(top),CLOCKWISE);
+*/
+  //in layer1
+  rotate_cube(cube,ncs,CLOCKWISE);
+  rotate_cube(cube,top,CLOCKWISE);
+  rotate_cube(cube,ncs,!CLOCKWISE);
+  rotate_cube(cube,top,CLOCKWISE);
+  rotate_cube(cube,ncs,CLOCKWISE);
+  rotate_cube(cube,top,CLOCKWISE);
+  rotate_cube(cube,ncs,!CLOCKWISE);
+
+
 }
 
 int nc_side(int cell){
@@ -211,53 +224,138 @@ int lnc_side(int cell){
    }
 }
 
+int nc_bottom(int top_cell){
+   switch(top_cell){
+     case 1: return(7); 
+     case 3: return(3); 
+     case 5: return(5); 
+     case 7: return(1); 
+   }
+}
+
 
 void solve_manually(cube_type cube){
 
-  int start_side=RUBIX_WHITE;
-  int c, i, j, s,ncs,lncs;
-
-  int state = 1;
+  int i, j;
+  int c1, i1, j1, ncs1,lncs1;
+  int c2, i2, j2, ncs2,lncs2;
+  int cb, ib, jb, ncsb,lncsb;
   
   int top = RUBIX_WHITE;
   int left = RUBIX_RED;
   int front = RUBIX_BLUE;
 
+  int state = 0;
 
   while(1){    
     switch(state){
-      case 1: //first layer non-corners
-              for(c=1;c<8;c+=2){
-//              c=1;
+      case 0: //first layer non-corners
+              for(c1=1;c1<8;c1+=2){
+                ncs1=nc_side(c1);
+                lncs1=lnc_side(c1);
+                i1=c1/3;
+                j1=c1%3;
 
-                ncs=nc_side(c);
-                lncs=lnc_side(c);
-                i=c/3;
-                j=c%3;
+                //if correct
+                if(cube[top][i1][j1]==top &&  cube[ncs1][0][1]==ncs1) continue;
 
-                if(cube[top][i][j]==top &&  cube[ncs][0][1]==ncs) continue;
-                if(cube[top][i][j]==ncs &&  cube[ncs][0][1]==top){
-                   rotate_cube(cube,lncs,!CLOCKWISE);
-                   rotate_cube(cube,opposite(lncs),CLOCKWISE);
-
-                   rotate_cube(cube,ncs,CLOCKWISE);
-                   rotate_cube(cube,ncs,CLOCKWISE);
-
-
-                   rotate_cube(cube,lncs,CLOCKWISE);  
-                   rotate_cube(cube,opposite(lncs),!CLOCKWISE);
-
-                   rotate_cube(cube,ncs,!CLOCKWISE);
+                //if inverted
+                if(cube[top][i1][j1]==ncs1 &&  cube[ncs1][0][1]==top){
+                   //put it down
+                   rotate_cube(cube,lncs1,!CLOCKWISE);
+                   rotate_cube(cube,opposite(lncs1),CLOCKWISE);
+                   rotate_cube(cube,ncs1,CLOCKWISE);
+                   rotate_cube(cube,ncs1,CLOCKWISE);
+                   rotate_cube(cube,lncs1,CLOCKWISE);  
+                   rotate_cube(cube,opposite(lncs1),!CLOCKWISE);
+         
+                   //fix from directly mid down
+                   rotate_cube(cube,ncs1,!CLOCKWISE);
                    rotate_cube(cube,top,!CLOCKWISE);
                    rotate_cube(cube,opposite(top),CLOCKWISE);
-                   rotate_cube(cube,opposite(lncs),CLOCKWISE);
+                   rotate_cube(cube,opposite(lncs1),CLOCKWISE);
                    rotate_cube(cube,top,CLOCKWISE);
                    rotate_cube(cube,opposite(top),CLOCKWISE);
                    continue; 
                  } //if 
-              }//for c in case 1
-              break;   
+                  
+                 //other cases
+                 //search from other top spots
+                 for(c2=c1+2; c2<8; c2+=2){
 
+                    ncs2=nc_side(c2);
+                    lncs2=lnc_side(c2);
+                    i2=c2/3;
+                    j2=c2%3;
+                     
+		    if((cube[top][i2][j2]==top  &&  cube[ncs2][0][1]==ncs1) ||
+                       (cube[top][i2][j2]==ncs1 &&  cube[ncs2][0][1]==top) 
+                      )
+                      break; 
+                 }
+                 if(c2<8){//found in top spots!                  
+
+                    cb=nc_bottom(c1);
+                    ib=cb/3;
+                    jb=cb%3;
+
+                    if(cube[top][i2][j2]==top &&  cube[ncs2][0][1]==ncs1){
+                      //put it down
+                      rotate_cube(cube,lncs2,!CLOCKWISE);
+                      rotate_cube(cube,opposite(lncs2),CLOCKWISE);
+                      rotate_cube(cube,ncs2,CLOCKWISE);
+                      rotate_cube(cube,ncs2,CLOCKWISE);
+                      rotate_cube(cube,lncs2,CLOCKWISE);  
+                      rotate_cube(cube,opposite(lncs2),!CLOCKWISE);                  
+  
+	              //find position
+                      while(!(cube[opposite(top)][ib][jb]==top && cube[ncs1][2][1]==ncs1))
+                         rotate_cube(cube, opposite(top), CLOCKWISE);
+
+                      //directly below
+		      rotate_cube(cube,lncs1,!CLOCKWISE);
+                      rotate_cube(cube,opposite(lncs1),CLOCKWISE);
+                      rotate_cube(cube,ncs1,CLOCKWISE);
+                      rotate_cube(cube,ncs1,CLOCKWISE);
+                      rotate_cube(cube,lncs1,CLOCKWISE);  
+                      rotate_cube(cube,opposite(lncs1),!CLOCKWISE);                  
+                    }
+                    else{
+                      //put it down
+                      rotate_cube(cube,lncs2,!CLOCKWISE);
+                      rotate_cube(cube,opposite(lncs2),CLOCKWISE);
+                      rotate_cube(cube,ncs2,CLOCKWISE);
+                      rotate_cube(cube,ncs2,CLOCKWISE);
+                      rotate_cube(cube,lncs2,CLOCKWISE);  
+                      rotate_cube(cube,opposite(lncs2),!CLOCKWISE);                  
+  
+		      //find position
+                      while(!(cube[opposite(top)][ib][jb]==ncs1 && cube[ncs1][2][1]==top))
+                         rotate_cube(cube, opposite(top), CLOCKWISE);
+
+                      //fix from directly mid down
+                      rotate_cube(cube,ncs1,!CLOCKWISE);
+                      rotate_cube(cube,top,!CLOCKWISE);
+                      rotate_cube(cube,opposite(top),CLOCKWISE);
+                      rotate_cube(cube,opposite(lncs1),CLOCKWISE);
+                      rotate_cube(cube,top,CLOCKWISE);
+                      rotate_cube(cube,opposite(top),CLOCKWISE);
+                    }
+
+                    print_cube2(cube);
+                    continue;
+                 }//if(c2<8){//found in top spots!
+
+                 //search in second layer
+
+
+
+
+
+              }//for c in case 1
+              if( c1==8)
+                state = 1; 
+              break;   
     }//switch(state)
     break;
   }//while(1) 
@@ -277,7 +375,7 @@ int main(){
   print_cube2(cube);
 
   
-  solve_cubem(cube);
+  solve_manually(cube);
   print_cube2(cube);
 
 
