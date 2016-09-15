@@ -233,6 +233,15 @@ int nc_bottom(int top_cell){
    }
 }
 
+int l2nc_side(int side){
+   switch(side){
+     case 1: return(3); 
+     case 2: return(7); 
+     case 3: return(5); 
+     case 4: return(1); 
+   }
+}
+
 
 void solve_manually(cube_type cube){
 
@@ -240,6 +249,8 @@ void solve_manually(cube_type cube){
   int c1, i1, j1, ncs1,lncs1;
   int c2, i2, j2, ncs2,lncs2;
   int cb, ib, jb, ncsb,lncsb;
+
+  int s,ns,prev_s,next_ns, s_top,top_not, ncs1_not, rotate_count;
   
   int top = RUBIX_WHITE;
   int left = RUBIX_RED;
@@ -280,7 +291,7 @@ void solve_manually(cube_type cube){
                  } //if 
                   
                  //other cases
-                 //search from other top spots
+                 //search c1 from other top spots (c2's)
                  for(c2=c1+2; c2<8; c2+=2){
 
                     ncs2=nc_side(c2);
@@ -300,7 +311,7 @@ void solve_manually(cube_type cube){
                     jb=cb%3;
 
                     if(cube[top][i2][j2]==top &&  cube[ncs2][0][1]==ncs1){
-                      //put it down
+                      //put c1 down, third layer
                       rotate_cube(cube,lncs2,!CLOCKWISE);
                       rotate_cube(cube,opposite(lncs2),CLOCKWISE);
                       rotate_cube(cube,ncs2,CLOCKWISE);
@@ -308,11 +319,11 @@ void solve_manually(cube_type cube){
                       rotate_cube(cube,lncs2,CLOCKWISE);  
                       rotate_cube(cube,opposite(lncs2),!CLOCKWISE);                  
   
-	              //find position
+	              //rotate third layer to find its designated position
                       while(!(cube[opposite(top)][ib][jb]==top && cube[ncs1][2][1]==ncs1))
                          rotate_cube(cube, opposite(top), CLOCKWISE);
 
-                      //directly below
+                      //do the move once directly below
 		      rotate_cube(cube,lncs1,!CLOCKWISE);
                       rotate_cube(cube,opposite(lncs1),CLOCKWISE);
                       rotate_cube(cube,ncs1,CLOCKWISE);
@@ -346,13 +357,60 @@ void solve_manually(cube_type cube){
                     continue;
                  }//if(c2<8){//found in top spots!
 
-                 //search in second layer
+                 //search c1 in second layer
+                 for(s=1; s<5; s++){
+                    ns = (s==4?1:s+1);
+                    if((cube[s][1][2]==top  &&  cube[ns][1][0]==ncs1) ||
+		       (cube[s][1][2]==ncs1  &&  cube[ns][1][0]==top) 
+                      )
+                      break;
+                 }//for(s=2; s<4; s++){
+
+                 if(s<5){//found c1!
+
+                    printf("found %i in side s%i ns%i, second layer!\n", c1, s,ns); 
+                    cb=l2nc_side(c1);
+                    ib=cb/3;
+                    jb=cb%3;
+                    s_top = cube[s][1][2]==top?ns:s;
+                    prev_s = (s==1?4:s-1);
+                    next_ns = (ns==4?1:ns+1);
+                    top_not = cube[top][i1][j1];
+                    ncs1_not = cube[ncs1][0][1];                  
+                    rotate_count=0;
+                    while(!(cube[s_top][0][1]==ncs1_not && cube[top][ib][jb]==top_not)){
+                         rotate_cube(cube, top, CLOCKWISE);  
+                    }
+		    print_cube2(cube);	
+                    if(s_top==s){
+                         rotate_cube(cube, top, CLOCKWISE);  
+                         rotate_cube(cube, prev_s, CLOCKWISE);  
+                         rotate_cube(cube, top, !CLOCKWISE);  
+                         rotate_cube(cube, opposite(top), CLOCKWISE);  
+                         rotate_cube(cube, s, !CLOCKWISE);  
+                    }
+		    else{
+                         rotate_cube(cube, top, !CLOCKWISE);  
+                         rotate_cube(cube, next_ns, !CLOCKWISE);  
+                         rotate_cube(cube, top, CLOCKWISE);  
+                         rotate_cube(cube, opposite(top), !CLOCKWISE);  
+                         rotate_cube(cube, ns, CLOCKWISE);  
+
+                    }
+                    //rotate top to its position
+                    while(!(cube[top][i1][j1]==top && cube[ncs1][0][1]==ncs1))
+                         rotate_cube(cube, top, CLOCKWISE);  
+
+
+                    continue;
+                 }//if(c2<8){//found in top spots!
+                 
+
+                 //search c1 in third layer
 
 
 
-
-
-              }//for c in case 1
+              }//for(c1=1;c1<8;c1+=2)
               if( c1==8)
                 state = 1; 
               break;   
