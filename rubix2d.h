@@ -61,6 +61,7 @@ int opposite(int side);
 int rubix_color(int side);
 char char_color(int side);
 void init_side(side_type side, int color);
+void init_siden(side_type side);
 void init_cube(cube_type cube);
 void swap(int *a, int *b);
 void rotate_side(side_type cube_side, int direction);
@@ -134,6 +135,15 @@ void init_side(side_type side, int color){
      for(j=0;j<N;j++)
        side[i][j]=color;
        //side[i][j]=i*N+j+1;
+}
+
+void init_siden(side_type side){
+   int i,j;
+
+   for(i=0;i<N;i++)
+     for(j=0;j<N;j++)
+       //side[i][j]=color;
+       side[i][j]=i*N+j+1;
 }
 
 void init_cube(cube_type cube){
