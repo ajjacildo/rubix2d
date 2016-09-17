@@ -172,7 +172,7 @@ void solve_backtrack(cube_type cube, int n){
    }
 }
 
-void shuffle_layer1(cube_type cube){
+void shuffle_moves(cube_type cube){
   int lncs = RUBIX_ORANGE;
   int top = RUBIX_WHITE;
   int ncs = RUBIX_GREEN;
@@ -196,7 +196,7 @@ void shuffle_layer1(cube_type cube){
   rotate_cube(cube,opposite(top),CLOCKWISE);
 */
 
-///*
+/*
   //in layer1
   rotate_cube(cube,ncs,CLOCKWISE);
   rotate_cube(cube,top,CLOCKWISE);
@@ -205,8 +205,13 @@ void shuffle_layer1(cube_type cube){
   rotate_cube(cube,ncs,CLOCKWISE);
   rotate_cube(cube,top,CLOCKWISE);
   rotate_cube(cube,ncs,!CLOCKWISE);
-//*/
+*/
 
+ corner_move(cube, ncs, opposite(top), CLOCKWISE);
+ corner_move(cube, lncs, opposite(top), !CLOCKWISE);
+ //reverse_corner_move(cube, ncs, opposite(top), CLOCKWISE);
+ //corner_move(cube, lncs, opposite(top), !CLOCKWISE);
+ //reverse_corner_move(cube, lncs, opposite(top), !CLOCKWISE);
 }
 
 //orientation functions to solve_manually function
@@ -271,15 +276,15 @@ int side_corner(int side){ //given a layer2 side, get the nc cell
    }
 }
 
-
 //end of orientation functions to solve_manually function
+
 
 void solve_manually(cube_type cube){
 
   int i, j;
   int c1, i1, j1, ncs1, lncs1;
   int c2, i2, j2, ncs2, lncs2;
-  int c3, i3, j3;
+  int c3, i3, j3, ncs3, lncs3;
 
   int s,ns,ps,nns, swtopc;
   int notc1_top, notc1_ncs1;
@@ -664,7 +669,7 @@ void solve_manually(cube_type cube){
                          if(cube[bottom][1][2]==bottom)
                            rotate_cube(cube,bottom,CLOCKWISE);
                          //do move 
-			 rotate_cube(cube,opposite(left),!CLOCKWISE);
+                         rotate_cube(cube,opposite(left),!CLOCKWISE);
                          rotate_cube(cube,opposite(front),!CLOCKWISE);
                          rotate_cube(cube,bottom,!CLOCKWISE);
                          rotate_cube(cube,opposite(front),CLOCKWISE);
@@ -712,12 +717,14 @@ void solve_manually(cube_type cube){
                 }
                 rotate_side(temp_side,CLOCKWISE); 
               }
+              printf("max_xsum = %i max_xsumi = %i\n",max_xsum,max_xsumi);
               print_cube2(cube);
-              for(i=0;i<max_xsum;i++)
+
+              for(i=0;i<max_xsumi;i++)
                 rotate_cube(cube,bottom,CLOCKWISE);
-              printf("max_xsum = %i max_xsum = %i\n",max_xsum,max_xsumi);
-              print_cube2(cube);
            
+              print_cube2(cube);
+              
               switch(max_xsum){   
                 case 16: break;
                 case  8: ncs1 = nc_side(nc_180(5));
@@ -739,7 +746,7 @@ void solve_manually(cube_type cube){
                          printf("I cross\n");
                          print_cube2(cube);
                 default: 
-			 for(s=1;s<5;s++){
+                         for(s=1;s<5;s++){
                            ns = (s==4?1:s+1);
                            printf("%i == %i && %i == %i\n",cube[s][2][1],s,cube[ns][2][1],ns);
                            if(cube[s][2][1]==s && cube[ns][2][1]==ns)
@@ -763,121 +770,113 @@ void solve_manually(cube_type cube){
 
                          printf("L cross\n");
                          print_cube2(cube);
-	      }//switch(max_xsum)
+              }//switch(max_xsum)
 
               state = 4;
               break;
               
       case 4: //SOLVE CORNERS ON LAYER 3
-/*
-              for(c3=0;c3<10;c3+=2){
-                if(c3 == 4) continue;
-                ncs3=nc_side(nc_180(c3));
-                lncs3=left_nc_side(nc_180(c3));
-                i3=c3/3;
-                j3=c3%3;
+
+              for(c1=0;c1<10;c1+=2){
+                if(c1 == 4) continue;
+                ncs1=nc_side(nc_180(c1));
+                lncs1=left_nc_side(nc_180(c1));
+                i1=c1/3;
+                j1=c1%3;
 
                 //CORNER c1 IN LAYER 1
                 //if correct
-                if(cube[bottom][i3][j3]==bottom && cube[ncs1][2][0]==ncs1 && cube[lncs1][2][2]==lncs1){
-                  //printf("corner c1 = %i fixed\n",c1);
-                  //print_cube2(cube);
+                if(cube[bottom][i1][j1]==bottom && cube[ncs1][2][0]==ncs1 && cube[lncs1][2][2]==lncs1){
+                  printf("layer3 corner c1 = %i fixed\n",c1);
+                  print_cube2(cube);
                   continue;
                 }
                 
-                //if found in top               
+                //search from other corners              
                 for(c2=c1;c2<10;c2+=2){
                   if(c2 == 4) continue;
 
-                  ncs2=nc_side(c2);
-                  lncs2=left_nc_side(c2);
+                  ncs2=nc_side(nc_180(c2));
+                  lncs2=left_nc_side(nc_180(c2));
                   i2=c2/3;
                   j2=c2%3;
 
-                  if((cube[top][i2][j2]==top   && cube[ncs2][0][0]==ncs1  && cube[lncs2][0][2]==lncs1) ||
-                     (cube[top][i2][j2]==top   && cube[ncs2][0][0]==lncs1 && cube[lncs2][0][2]==ncs1 ) ||
-                     (cube[top][i2][j2]==ncs1  && cube[ncs2][0][0]==top   && cube[lncs2][0][2]==lncs1) ||
-                     (cube[top][i2][j2]==ncs1  && cube[ncs2][0][0]==lncs1 && cube[lncs2][0][2]==top  ) ||
-                     (cube[top][i2][j2]==lncs1 && cube[ncs2][0][0]==top   && cube[lncs2][0][2]==ncs1 ) ||
-                     (cube[top][i2][j2]==lncs1 && cube[ncs2][0][0]==ncs1  && cube[lncs2][0][2]==top  )
-                    )break;
+                  if((cube[bottom][i2][j2]==bottom && cube[ncs2][2][0]==ncs1   && cube[lncs2][2][2]==lncs1 ) ||
+                     (cube[bottom][i2][j2]==bottom && cube[ncs2][2][0]==lncs1  && cube[lncs2][2][2]==ncs1  ) ||
+                     (cube[bottom][i2][j2]==ncs1   && cube[ncs2][2][0]==bottom && cube[lncs2][2][2]==lncs1 ) ||
+                     (cube[bottom][i2][j2]==ncs1   && cube[ncs2][2][0]==lncs1  && cube[lncs2][2][2]==bottom) ||
+                     (cube[bottom][i2][j2]==lncs1  && cube[ncs2][2][0]==bottom && cube[lncs2][2][2]==ncs1  ) ||
+                     (cube[bottom][i2][j2]==lncs1  && cube[ncs2][2][0]==ncs1   && cube[lncs2][2][2]==bottom)
+                     )break;
                 }
-                if(c2<10){//found corner c1 in layer 1
-                  //printf("corner c1 = %i found in a top spot c2 = %i\n",c1,c2);
-                  //print_cube2(cube);
+                if(c2<10){//found corner c1 in layer3
+                  printf("corner c1 = %i found in layer3 spot, c2 = %i\n",c1,c2);
+                  print_cube2(cube);
 
-                  //put corner in layer 3
-                  rotate_cube(cube, ncs2, !CLOCKWISE);
-                  rotate_cube(cube, bottom, !CLOCKWISE);                  
-                  rotate_cube(cube, ncs2, CLOCKWISE);
-                  
-                  //printf("corner c1 = %i placed in layer 3\n",c1,c2);
-                  //print_cube2(cube);
-                  break;
-                }//if(c2<8){//found corner c1 in layer 1
+                  switch(c1){
+                    case 0:
+                            switch(c2){
+                              case 0:
+                                      if(cube[lncs1][2][2] == bottom){
+                                        corner_move(cube, opposite(ncs1), bottom, CLOCKWISE);
+                                        corner_move(cube, opposite(lncs1), bottom, !CLOCKWISE);
+                                      }
+                                      else{
+//                                        corner_move(cube, lncs1, bottom, !CLOCKWISE);
+//                                        corner_move(cube, ncs1, bottom, CLOCKWISE);
+                                        reverse_corner_move(cube, opposite(lncs1), bottom, !CLOCKWISE);
+                                        reverse_corner_move(cube, opposite(ncs1), bottom, CLOCKWISE);
+                                      }
+                                      break;
+                              case 2: reverse_corner_move(cube, opposite(ncs1), bottom, CLOCKWISE);
+                                      break;
+                              case 8: corner_move(cube, opposite(ncs1), bottom, CLOCKWISE);
+                                      break;
+                              case 6: corner_move(cube, ncs1, bottom, CLOCKWISE);
+                                      break; 
+                            }
+                            break;
+                    case 2: 
+                            switch(c2){
+                                      
+                              case 2: if(cube[lncs1][2][2] == bottom){
+                                        corner_move(cube, opposite(ncs1), bottom, CLOCKWISE);
+                                        corner_move(cube, opposite(lncs1), bottom, !CLOCKWISE);
+                                      }
+                                      else{
+//                                        corner_move(cube, lncs1, bottom, !CLOCKWISE);
+//                                        corner_move(cube, ncs1, bottom, CLOCKWISE);
+                                        reverse_corner_move(cube, opposite(lncs1), bottom, !CLOCKWISE);
+                                        reverse_corner_move(cube, opposite(ncs1), bottom, CLOCKWISE);
 
-                //printf("corner c1 = %i in layer 3\n",c1);
-                //print_cube2(cube);
-             
-                c3 = nc_180(c1);
-                i3 = c3/3;
-                j3 = c3%3;
-                
-                while(!((cube[bottom][i3][j3]==top   && cube[ncs1][2][0]==ncs1  && cube[lncs1][2][2]==lncs1) ||
-                        (cube[bottom][i3][j3]==top   && cube[ncs1][2][0]==lncs1 && cube[lncs1][2][2]==ncs1 ) ||
-                        (cube[bottom][i3][j3]==ncs1  && cube[ncs1][2][0]==top   && cube[lncs1][2][2]==lncs1) ||
-                        (cube[bottom][i3][j3]==ncs1  && cube[ncs1][2][0]==lncs1 && cube[lncs1][2][2]==top  ) ||
-                        (cube[bottom][i3][j3]==lncs1 && cube[ncs1][2][0]==top   && cube[lncs1][2][2]==ncs1 ) ||
-                        (cube[bottom][i3][j3]==lncs1 && cube[ncs1][2][0]==ncs1  && cube[lncs1][2][2]==top  )
-                       ))rotate_cube(cube, bottom, CLOCKWISE);
-                
-                //printf("position corner c1 = %i directly below top position\n",c1);
-                //print_cube2(cube);
-                
-                //if top color in bottom
-                if(cube[bottom][i3][j3]==top){
+                                      }
+                                      //check if it solves the entire cube
+                                      if(cube[bottom][2][2]==bottom) break;
 
-                  //printf("corner c1 = %i top color = %i in bottom\n",c1,top);
-                  //print_cube2(cube);
+                                      //continue to fix last two corners                                                                            
+                                      if(cube[bottom][2][2]==cube[bottom][2][0]){
+                                        corner_move(cube,lncs1,bottom,CLOCKWISE);
+                                        corner_move(cube,opposite(ncs1),bottom,!CLOCKWISE);
+                                      }
+                                      else{
+                                        corner_move(cube,top,opposite(lncs1),CLOCKWISE);
+                                        corner_move(cube,ncs1,opposite(lncs1),!CLOCKWISE);
+                                      }
+                                      break;
 
-                  rotate_cube(cube, ncs1, !CLOCKWISE);   
-                  rotate_cube(cube, bottom, !CLOCKWISE);
-                  rotate_cube(cube, bottom, !CLOCKWISE);
-                  rotate_cube(cube, ncs1, CLOCKWISE);
-                  
-                  //printf("place corner c1 = %i to move top color from bottom\n",c1);
-                  //print_cube2(cube);
+                             case 8: reverse_corner_move(cube, opposite(ncs1), bottom, CLOCKWISE);
+                                      break;
+                              case 6: corner_move(cube, opposite(ncs1), bottom, CLOCKWISE);
+                                      break; 
 
-                  break;
-
+                              //default: 
+                            }
+                  }
                 }
-                
-                //if top color in ncs1
-                if(cube[ncs1][2][0]==top){
-                  //printf("corner c1 = %i top color = %i in ncs1\n",c1, top);
-                  //print_cube2(cube);
-                  
-                  rotate_cube(cube, ncs1, !CLOCKWISE);   
-                  rotate_cube(cube, bottom, !CLOCKWISE);
-                  rotate_cube(cube, ncs1, CLOCKWISE);
-                 
-                }
-                else{
-                  //printf("corner c1 = %i top color = %i in ncs1\n",c1,top);
-                  //print_cube2(cube);
-
-                  rotate_cube(cube, lncs1, CLOCKWISE);   
-                  rotate_cube(cube, bottom, CLOCKWISE);
-                  rotate_cube(cube, lncs1, !CLOCKWISE);
-                }
-
-                //printf("after fixing corner c1 = %i\n",c1);
-                //print_cube2(cube);
-
-
+                if(c1>2) continue;
+                if(cube[bottom][i1][j1]!=bottom) break;
               }//for(c1=0;c0<8;c1+=2){  
-              if(!(c1<10)) state = 2; 
-*/            state = 5;
+              if(!(c1<10)) state = 5; 
               break; //case 4
     }//switch(state)
     if (state == 5) break;
@@ -896,7 +895,8 @@ int main(){
   print_cube2(cube);
 
 
-  shuffle_layer1(cube);
+  shuffle_from_file_char(cube);
+  //shuffle_moves(cube);
   print_cube2(cube);
 
   

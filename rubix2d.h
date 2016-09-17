@@ -455,6 +455,52 @@ void print_cube(cube_type cube){
    printf("\n");
 }
 
+void corner_move(cube_type cube, int right, int top, int direction){
+   
+   rotate_cube(cube, right, CLOCKWISE);
+   rotate_cube(cube, opposite(right), !CLOCKWISE);
+
+   rotate_cube(cube, top, direction);
+   if(direction==CLOCKWISE) rotate_cube(cube, right, !CLOCKWISE);
+   else rotate_cube(cube, opposite(right), CLOCKWISE);
+
+   rotate_cube(cube, top, !direction);
+   if(direction==CLOCKWISE) rotate_cube(cube, opposite(right), CLOCKWISE);
+   else rotate_cube(cube, right, !CLOCKWISE);
+
+   rotate_cube(cube, top, direction);
+   if(direction==CLOCKWISE) rotate_cube(cube, right, CLOCKWISE);
+   else rotate_cube(cube, opposite(right), !CLOCKWISE);
+
+   rotate_cube(cube, top, !direction);
+   if(direction==CLOCKWISE) rotate_cube(cube, right, !CLOCKWISE);
+   else rotate_cube(cube, opposite(right), CLOCKWISE);
+}
+
+void reverse_corner_move(cube_type cube, int right, int top, int direction){
+
+   if(direction==CLOCKWISE) rotate_cube(cube, right, CLOCKWISE);
+   else rotate_cube(cube, opposite(right), !CLOCKWISE);
+   rotate_cube(cube, top, direction);
+
+
+   if(direction==CLOCKWISE) rotate_cube(cube, right, !CLOCKWISE);
+   else rotate_cube(cube, opposite(right), CLOCKWISE);
+   rotate_cube(cube, top, !direction);
+
+
+   if(direction==CLOCKWISE) rotate_cube(cube, opposite(right), !CLOCKWISE);
+   else rotate_cube(cube, right, CLOCKWISE);
+   rotate_cube(cube, top, direction);
+
+   if(direction==CLOCKWISE) rotate_cube(cube, right, CLOCKWISE);
+   else rotate_cube(cube, opposite(right), !CLOCKWISE);
+   rotate_cube(cube, top, !direction);
+
+   rotate_cube(cube, right, !CLOCKWISE);
+   rotate_cube(cube, opposite(right), CLOCKWISE);  
+}
+
 void cube2x2gen(cube_type cube, int top, int left, int right){
 
   if (N!=3) return;
